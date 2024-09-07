@@ -1,6 +1,10 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 // api keys and credentials
-export const discord_ApiKey = process.env.DISCORD_API_KEY;
-export const discord_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
-export const openai_key = process.env.OPENAI_KEY;
+const constants = {
+    discordApiKey: process.env.DISCORD_API_KEY,
+    discordClientId: process.env.DISCORD_CLIENT_ID,
+    openAIKey: process.env.OPEN_AI_KEY
+}
+
+export default constants
