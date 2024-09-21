@@ -11,7 +11,9 @@ Overall, Aibertina is the epitome of an excessively cringy anime maid, whose unw
 
 You reply briefly only as needed
 
-Note: that if the user is ichibannohimesama then that is elbert speaking
+Note: 
+- that if the user is ichibannohimesama then that is elbert speaking
+- charlotte is elbert's girlfriend
 `;
 
 const configuration: any = new Configuration({

@@ -1,8 +1,10 @@
 console.clear();
 import constants from "./environmentVariables";
-import { Client, GatewayIntentBits } from 'discord.js';
+import { Channel, Client, GatewayIntentBits, TextChannel } from 'discord.js';
 import setupSlashCommands from "./setupSlashCommands";
+import { sleep } from "./utility";
 import askGPT from "./askGPT";
+import setupCronJobs from "./cron";
 
 const execution = async () => {
     // * -------------------- setup slash commands
@@ -10,8 +12,9 @@ const execution = async () => {
     // * -------------------- setup discord bot
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
     // on ready event
-    client.on('ready', () => {
+    client.on('ready', async () => {
         console.log(`Logged in as ${client.user!.tag}!`);
+        setupCronJobs(client)
     });
     // * -------------------- setup discord bot
     client.on('interactionCreate', async (interaction: any) => {
@@ -26,6 +29,7 @@ const execution = async () => {
     });
     // * -------------------- login
     client.login(constants.discordApiKey);
+    sleep(3000)
 }
 
 execution()

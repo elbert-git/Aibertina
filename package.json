@@ -4,7 +4,8 @@
     "ts": "tsc --watch"
   },
   "dependencies": {
-    "discord.js": "^14.13.0",
+    "cron": "^3.1.7",
+    "discord.js": "^14.16.2",
     "dotenv": "^16.3.1",
     "nodemon": "^3.1.4",
     "openai": "^4.14.1",
