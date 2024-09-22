@@ -55,7 +55,7 @@ const execution = async () => {
                     const channelId = interaction.channelId
                     try {
                         reminders.addReminder(serverId, channelId, userId, paramsParsed.message, new Date(newTime))
-                        await interaction.editReply(`a-okay senpai`);
+                        await interaction.editReply(`> ${messageReceived} \n a-okay senpai`);
                     }
                     catch (e) {
                         console.log(e)
