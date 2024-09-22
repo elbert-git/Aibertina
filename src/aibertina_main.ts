@@ -2,15 +2,16 @@ console.clear();
 import constants from "./environmentVariables";
 import { Channel, Client, GatewayIntentBits, TextChannel } from 'discord.js';
 import setupSlashCommands from "./setupSlashCommands";
-import { calculateTime, sleep } from "./utility";
-import askGPT from "./askGPT";
+import { calculateTime, sleep, splitStringIntoChunks } from "./utility";
+import askGPT, { askGPTDirect } from "./askGPT";
 import setupCronJobs from "./cron";
 import Reminders from "./commands/reminders/remindersModule";
+import { extract } from 'article-parser'
 
 
-const reminders = new Reminders()
 
 const execution = async () => {
+    const reminders = new Reminders()
     // * -------------------- setup slash commands
     await setupSlashCommands();
     // * -------------------- setup discord bot
@@ -43,7 +44,7 @@ const execution = async () => {
                     for example if you see 'remind me to go shower in 3 minutes', return {minutes:3, message:'go shower'}.
                     if you can't get get the time return {error: 'true'}.dont return markdown json, just the raw json.
                 `
-                const params = await askGPT(messageReceived, prePrompt)
+                const params = await askGPTDirect(messageReceived, prePrompt)
                 const paramsParsed = JSON.parse(params!)
                 if (!paramsParsed.error) {
                     // calculate next time
@@ -65,6 +66,39 @@ const execution = async () => {
                     await interaction.editReply(`hm.. i can't exactly parse that out please reword your reminder`);
                 }
             }
+            if (interaction.commandName === 'summarize') {
+                (async () => {
+                    try {
+                        // fetch article content
+                        await interaction.editReply(`extracting content...`);
+                        const link = interaction.options._hoistedOptions[0].value;
+                        const extraction = await extract(link)
+                        const wordLimit = 20000
+                        if (extraction.content!.length < wordLimit) {
+                            await interaction.editReply(`Aibertina is reading really intently...`);
+                            // split into chunks
+                            const chunks = splitStringIntoChunks(extraction.content!, 1000)
+                            // summarise each chunk
+                            let summarisedChunks = ""
+                            for (let index = 0; index < chunks.length; index++) {
+                                const summedchunk = await askGPTDirect(`Here is the article excerpt: ${chunks[index]}`, "summarise what you are given in brief bullet points. Don't write more than 100 words")
+                                summarisedChunks += `\n ${summedchunk}`
+                                await interaction.editReply(`Aibertina is reading really intently... ${index}/${chunks.length}`);
+                            }
+                            const finalSummary = await askGPT(`In less than 100 words (very important less than 100 words), please give me a summary in bullet points of:  ${summarisedChunks}`)
+                            await interaction.editReply(`<@${interaction.user.id}> Here is the summary of: ${link} \n ${finalSummary}`);
+                        } else {
+                            const msg = await askGPT(`Please apologize that you can't summarise this article as it exceeds the character limit of ${wordLimit}. in less than 20 words`)
+                            await interaction.editReply(msg);
+                        }
+                    }
+                    catch (e) {
+                        const response = await askGPT(`this is an error: ${e}. please reword it simply and in less than 50 words. please apologize and ask user to let Elbert know`)
+                        console.log(e)
+                        await interaction.editReply(response);
+                    }
+                })();
+            }
         }
         // handle errors
         catch (e) {
@@ -81,3 +115,24 @@ const execution = async () => {
 }
 
 execution()
+
+
+// (async () => {
+//     // const link = interaction.options._hoistedOptions[0].value;
+//     const link = "https://www.bbc.com/news/live/c1m955z0veyt"
+//     // fetch article content
+//     const extraction = await extract(link)
+//     console.log(extraction.content!.length)
+//     // split into chunks
+//     const chunks = splitStringIntoChunks(extraction.content!, 1000)
+//     // summarise each chunk
+//     let summarisedChunks = ""
+//     for (let index = 0; index < chunks.length; index++) {
+//         console.log('chunk', index)
+//         const summedchunk = await askGPTDirect(`Here is the article excerpt: ${chunks[index]}`, "summarise what you are given in brief bullet points")
+//         summarisedChunks += `\n ${summedchunk}`
+//     }
+//     const finalSummary = await askGPTDirect(`Here is the article excerpt: ${summarisedChunks}`, "summarise what you are given in brief bullet points")
+//     console.log("=[==========================================")
+//     console.log(finalSummary)
+// })()

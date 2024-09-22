@@ -18,3 +18,11 @@ export function calculateTime(params: { [index: string]: number }) {
     })
     return total
 }
+
+export function splitStringIntoChunks(string: string, n = 1000) {
+    let chunks = [];
+    for (let i = 0; i < string.length; i += n) {
+        chunks.push(string.slice(i, i + n));
+    }
+    return chunks;
+}

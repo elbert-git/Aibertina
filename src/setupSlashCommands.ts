@@ -22,6 +22,14 @@ export default async function setupSlashCommands() {
                 option.setName('message')
                     .setDescription('Tell her what and when to remind you')
                     .setRequired(true));
+        // * -------------- Creating a summary command
+        const summarize = new SlashCommandBuilder()
+            .setName('summarize')
+            .setDescription('Task Aibertina to read and summarise text')
+            .addStringOption(option =>
+                option.setName('link')
+                    .setDescription('The article link')
+                    .setRequired(true));
         // * -------------- Creating the youtube summary 
         // const YTsummarise = new SlashCommandBuilder()
         //     .setName('ytsum')
@@ -31,7 +39,7 @@ export default async function setupSlashCommands() {
         //             .setDescription('youtube video link')
         //             .setRequired(true));
         // * -------------- Register the commands
-        const commands = [aiCommand, remindCommand];
+        const commands = [aiCommand, remindCommand, summarize];
         const rest = new REST({ version: '10' }).setToken(constants.discordApiKey as string);
         try {
             console.log('Started refreshing application (/) commands.');

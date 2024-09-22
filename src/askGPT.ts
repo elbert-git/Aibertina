@@ -32,3 +32,14 @@ export default async function askGPT(prompt: string, prePrompt = characterPrompt
     });
     return completion.choices[0].message.content;
 }
+
+export async function askGPTDirect(prompt: string, prePrompt = characterPrompt) {
+    const completion = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+            { role: "user", content: prePrompt },
+            { role: "user", content: prompt }
+        ],
+    });
+    return completion.choices[0].message.content;
+}
