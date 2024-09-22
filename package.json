@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start": "nodemon dist/aibertina_main.js",
-    "ts": "tsc --watch"
+    "ts": "tsc --watch",
+    "test": "vitest"
   },
   "dependencies": {
     "cron": "^3.1.7",
@@ -10,5 +11,8 @@
     "nodemon": "^3.1.4",
     "openai": "^4.14.1",
     "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.1"
   }
 }

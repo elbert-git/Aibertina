@@ -21,11 +21,11 @@ const configuration: any = new Configuration({
 });
 const openai = new OpenAI(configuration);
 
-export default async function askGPT(prompt: string) {
+export default async function askGPT(prompt: string, prePrompt = characterPrompt) {
     const completion = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
-            { role: "user", content: characterPrompt },
+            { role: "user", content: prePrompt },
             { role: "user", content: "I need you to reply as if you are her" },
             { role: "user", content: prompt }
         ],
