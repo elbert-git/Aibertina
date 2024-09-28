@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "nodemon dist/aibertina_main.js",
+    "start": "nodemon dist/aibertina_main.js --ignore dataFolder/",
     "ts": "tsc --watch",
     "test": "vitest"
   },
