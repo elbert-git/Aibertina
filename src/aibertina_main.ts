@@ -13,7 +13,14 @@ const execution = async () => {
   // * -------------------- setup slash commands
   await setupSlashCommands();
   // * -------------------- setup discord bot
-  const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+  const client = new Client({
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.MessageContent,
+      GatewayIntentBits.GuildMembers,
+    ],
+  });
   // on ready event
   client.on("ready", async () => {
     console.log(`Logged in as ${client.user!.tag}!`);
@@ -21,10 +28,24 @@ const execution = async () => {
     reminders.discordClient = client;
   });
   // * -------------------- setup discord bot
+  client.on("messageCreate", async (message) => {
+    // check if reply
+    const initialMessageContent = message.content;
+    if (message.reference) {
+      // get to the root
+      //but first get one up
+      const initialMessageContent = message.content;
+      const replyMessageData = await message.channel.messages.fetch(
+        message.reference.messageId as string
+      );
+      const replyMessageContent = replyMessageData.content;
+      console.log(initialMessageContent, replyMessageContent);
+    }
+  });
   client.on("interactionCreate", async (interaction: any) => {
     // ignore if not a command
     if (!interaction.isChatInputCommand()) return;
-    // feedback to user bot is thinking
+    // feedback to user bot is thinkingkkkkkjk
     await interaction.reply("*I'm thinking very hard uwu...*");
     // process command
     try {

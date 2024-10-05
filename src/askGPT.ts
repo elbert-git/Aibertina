@@ -17,29 +17,35 @@ Note:
 `;
 
 const configuration: any = new Configuration({
-    apiKey: constants.openAIKey
+  apiKey: constants.openAIKey,
 });
 const openai = new OpenAI(configuration);
 
-export default async function askGPT(prompt: string, prePrompt = characterPrompt) {
-    const completion = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-            { role: "user", content: prePrompt },
-            { role: "user", content: "I need you to reply as if you are her" },
-            { role: "user", content: prompt }
-        ],
-    });
-    return completion.choices[0].message.content;
+export default async function askGPT(
+  prompt: string,
+  prePrompt = characterPrompt
+) {
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      { role: "user", content: prePrompt },
+      { role: "user", content: "I need you to reply as if you are her" },
+      { role: "user", content: prompt },
+    ],
+  });
+  return completion.choices[0].message.content;
 }
 
-export async function askGPTDirect(prompt: string, prePrompt = characterPrompt) {
-    const completion = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-            { role: "user", content: prePrompt },
-            { role: "user", content: prompt }
-        ],
-    });
-    return completion.choices[0].message.content;
+export async function askGPTDirect(
+  prompt: string,
+  prePrompt = characterPrompt
+) {
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      { role: "user", content: prePrompt },
+      { role: "user", content: prompt },
+    ],
+  });
+  return completion.choices[0].message.content;
 }
