@@ -26,3 +26,15 @@ export function splitStringIntoChunks(string: string, n = 1000) {
     }
     return chunks;
 }
+
+export async function isMessageAnAibertinaReply(message: any) {
+    let isAibertinaReply = false
+    if (message.reference) {
+        const repliedMessageData = await message.channel.messages.fetch(message.reference.messageId as string)
+        const replyingUserName = repliedMessageData.author.username
+        if (replyingUserName === "Aibertina" || replyingUserName === "Aibertina-dev") {
+            isAibertinaReply = true
+        }
+    }
+    return isAibertinaReply
+}

@@ -1,7 +1,7 @@
 import { CronJob } from "cron";
 import { Client, TextChannel } from "discord.js";
 import askGPT from "./askGPT";
-import constants from "./environmentVariables";
+import constants from "../environmentVariables";
 
 export default function setupCronJobs(client: Client) {
     const honeyLunchReminder = new CronJob(

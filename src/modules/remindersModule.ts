@@ -1,19 +1,27 @@
 import { ActionRow, ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, TextChannel, channelLink } from 'discord.js'
 import * as fs from 'fs'
-import askGPT from '../../askGPT'
+import askGPT from './askGPT'
 
 interface ReminderLog {
     message: string
     time: number
     channelId: string
     userId: string
+    fired: boolean
 }
 
 export default class Reminders {
     currentData: { [index: string]: Array<ReminderLog> } = {}
     dataFolder = "dataFolder/"
     discordClient: Client | null = null
+    static instance: Reminders | null = null
     constructor() {
+        // singleton
+        if (Reminders.instance) {
+            return Reminders.instance
+        }
+        Reminders.instance = this
+
         try {
             // load up disk
             this.loadDataFromDisk()
@@ -35,7 +43,8 @@ export default class Reminders {
             message: message,
             time: time.getTime(),
             channelId: channelId,
-            userId: userId
+            userId: userId,
+            fired: false
         })
     }
     getReminders(serverId: string) {
@@ -53,7 +62,6 @@ export default class Reminders {
     }
     // * --- ticker
     tick() {
-        this.saveDataToDisk()
         try {
             console.log('reminder tick')
             // parse throught every remidner
@@ -67,21 +75,23 @@ export default class Reminders {
                         // process the reminder
                         if (this.discordClient) {
                             (async () => {
+                                if (reminderLog.fired) { return null }
                                 const channel = this.discordClient!.channels.cache.get(reminderLog.channelId) as TextChannel
                                 const message = await askGPT(`Here's a reminder for the user: ${reminderLog.message}. Please reminde them of this in less than 30 words`)
                                 // create buttons
-                                const b = new ButtonBuilder()
-                                    .setCustomId('snooze')
-                                    .setLabel('snooze')
-                                    .setStyle(ButtonStyle.Primary)
-                                const row: any = new ActionRowBuilder()
-                                    .addComponents(b)
+                                // const b = new ButtonBuilder()
+                                //     .setCustomId('snooze')
+                                //     .setLabel('snooze')
+                                //     .setStyle(ButtonStyle.Primary)
+                                // const row: any = new ActionRowBuilder()
+                                //     .addComponents(b)
                                 // send response
                                 // await channel!.send(`Hi! <@${reminderLog.userId}> \n > ${reminderLog.message} \n ${message}`)
                                 const resAFterSend = await channel!.send({
                                     content: `Hi! <@${reminderLog.userId}> \n > ${reminderLog.message} \n ${message}`,
                                     // components: [row]
                                 })
+                                reminderLog.fired = true
                                 // try {
                                 //     const snoozeResponse = await resAFterSend.awaitMessageComponent({
                                 //         time: 10_000
@@ -102,11 +112,10 @@ export default class Reminders {
                 })
                 // cull past reminders reminders
                 this.currentData[serverId] = this.currentData[serverId].filter((reminderLog) => {
-                    const time = reminderLog.time
-                    const gapInSeconds = (time - Date.now()) / 1000
-                    return gapInSeconds >= 50
+                    return !reminderLog.fired
                 })
             })
+            this.saveDataToDisk()
         }
         catch (e) {
             console.log('error while reminder tick')
