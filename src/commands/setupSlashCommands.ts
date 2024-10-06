@@ -45,7 +45,7 @@ export default async function setupSlashCommands() {
                     .setDescription('youtube video link')
                     .setRequired(true));
         // * -------------- Register the commands
-        const commands = [aiCommand, remindCommand, summarizeCommand, YTsummariseCommand];
+        const commands = [aiCommand, remindCommand, summarizeCommand];
         const rest = new REST({ version: "10" }).setToken(
             constants.discordApiKey as string
         );

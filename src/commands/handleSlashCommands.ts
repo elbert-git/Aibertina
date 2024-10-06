@@ -74,7 +74,7 @@ export async function summarize(interaction: any) {
                 `Aibertina is reading really intently...`
             );
             const finalSummary = await askGPT(
-                `In less than 100 words (very important less than 100 words), please give me a summary in bullet points of:  ${extraction}`
+                `In less than 100 words (very important less than 100 words), please give me a summary in bullet points of:  ${extraction.content}`
             );
             await interaction.editReply(
                 `<@${interaction.user.id}> Here is the summary of: ${link} \n ${finalSummary}`
@@ -136,5 +136,4 @@ export const commandHandlers: CommandHandlers = {
     ai,
     remind,
     summarize,
-    ytsummarize
 }
