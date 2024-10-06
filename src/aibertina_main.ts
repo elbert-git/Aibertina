@@ -1,14 +1,13 @@
 console.clear();
 import constants from "./environmentVariables";
-import { Client, GatewayIntentBits, Interaction, TextChannel } from "discord.js";
+import { Client, GatewayIntentBits, Interaction } from "discord.js";
 import setupSlashCommands from "./commands/setupSlashCommands";
-import { calculateTime, isMessageAnAibertinaReply, sleep, splitStringIntoChunks } from "./utility";
 import setupCronJobs from "./modules/cron";
-import { extract } from "article-parser";
-import { ai } from "./commands/handleSlashCommands";
 import Reminders from "./modules/remindersModule";
 import askGPT, { askGPTWithHistory } from "./modules/askGPT";
 import { commandHandlers } from "./commands/handleSlashCommands";
+import { YoutubeTranscript } from 'youtube-transcript';
+import { isMessageAnAibertinaReply } from "./utility";
 
 
 const execution = async () => {
@@ -61,8 +60,3 @@ const execution = async () => {
     client.login(constants.discordApiKey);
 }
 execution();
-
-// ! testing
-(async () => {
-    // 
-})()

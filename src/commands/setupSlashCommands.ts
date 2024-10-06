@@ -37,15 +37,15 @@ export default async function setupSlashCommands() {
                     .setRequired(true)
             );
         // * -------------- Creating the youtube summary
-        // const YTsummarise = new SlashCommandBuilder()
-        //     .setName('ytsum')
-        //     .setDescription('Task Aibertina to watch and summarise a youtube video for you')
-        //     .addStringOption(option =>
-        //         option.setName('link')
-        //             .setDescription('youtube video link')
-        //             .setRequired(true));
+        const YTsummariseCommand = new SlashCommandBuilder()
+            .setName('ytsummarize')
+            .setDescription('Task Aibertina to watch and summarise a youtube video for you')
+            .addStringOption(option =>
+                option.setName('link')
+                    .setDescription('youtube video link')
+                    .setRequired(true));
         // * -------------- Register the commands
-        const commands = [aiCommand, remindCommand, summarizeCommand];
+        const commands = [aiCommand, remindCommand, summarizeCommand, YTsummariseCommand];
         const rest = new REST({ version: "10" }).setToken(
             constants.discordApiKey as string
         );

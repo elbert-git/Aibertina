@@ -55,7 +55,7 @@ export async function askGPTWithJson(
 }
 
 async function constructMessageHistory(message: OmitPartialGroupDMChannel<Message<boolean>>) {
-    const max_iterations = 5
+    const max_iterations = 10
     const replyChain = [
         { role: "user", content: `${message.author.username} says: ${message.content}` },
     ]

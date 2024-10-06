@@ -11,7 +11,8 @@
     "dotenv": "^16.3.1",
     "nodemon": "^3.1.4",
     "openai": "^4.14.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "youtube-transcript": "^1.2.1"
   },
   "devDependencies": {
     "vitest": "^2.1.1"
